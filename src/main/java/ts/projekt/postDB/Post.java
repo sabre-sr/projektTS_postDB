@@ -1,8 +1,9 @@
 package ts.projekt.postDB;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Post {
+public class Post implements Serializable {
     public User author;
     private int id;
     private String postBody;

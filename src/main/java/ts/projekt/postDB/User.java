@@ -1,6 +1,8 @@
 package ts.projekt.postDB;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
     private String username;
     private int id;
     private String email;

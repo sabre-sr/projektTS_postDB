@@ -1,6 +1,7 @@
 package ts.projekt.postDB;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class Database {
     public static Database bazaDanych = new Database();
@@ -40,10 +41,30 @@ public class Database {
 
     private void createDb() throws SQLException {
         statement = conn.prepareStatement("""
-                
-                  
+                CREATE TABLE `posts` (
+                  `id` int(11) NOT NULL AUTO_INCREMENT,
+                  `id_autor` int(11) NOT NULL,
+                  `id_odpowiedz` int(11) DEFAULT NULL,
+                  `data_postu` datetime DEFAULT NULL,
+                  `tresc` varchar(500) NOT NULL,
+                  PRIMARY KEY (`id`),
+                  UNIQUE KEY `table_name_id_uindex` (`id`)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Post database';
                 """);
+        statement.execute();
     }
+
+    public Post getPost(int id) {
+        return null;
+    }
+
+    public ArrayList<Post> getReplies(int post_id) {
+        return null;
+    }
+    public ArrayList<Post> getAllPosts(int limit) {
+        return null;
+    }
+
     public static void main(String[] args){
 
     }
