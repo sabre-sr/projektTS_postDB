@@ -6,8 +6,6 @@ import java.util.ArrayList;
 public class Database {
     public static Database bazaDanych = new Database();
     private static Connection conn;
-    private PreparedStatement statement;
-    private ResultSet result;
 
     private Database() {
         Connection conn = null;
@@ -28,19 +26,22 @@ public class Database {
     }
 
     public boolean checkIfDbExists() throws SQLException {
-        statement = conn.prepareStatement("""
+        PreparedStatement statement = conn.prepareStatement("""
             SELECT *
             FROM information_schema.tables
             WHERE table_schema = 'posts' 
                 AND table_name = 'posts'
             LIMIT 1;
         """);
-        result = statement.executeQuery();
-        return result.next();
+        ResultSet result = statement.executeQuery();
+        boolean exists = result.next();
+        result.close();
+        statement.close();
+        return exists;
     }
 
     private void createDb() throws SQLException {
-        statement = conn.prepareStatement("""
+        PreparedStatement statement = conn.prepareStatement("""
                 CREATE TABLE `posts` (
                   `id` int(11) NOT NULL AUTO_INCREMENT,
                   `id_autor` int(11) NOT NULL,
@@ -52,10 +53,18 @@ public class Database {
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Post database';
                 """);
         statement.execute();
+        statement.close();
+    }
+
+    public boolean addPost(Post post) {
+        return false;
     }
 
     public Post getPost(int id) {
         return null;
+    }
+    public boolean removePost(int id) {
+        return false;
     }
 
     public ArrayList<Post> getReplies(int post_id) {
