@@ -13,6 +13,9 @@ public class User implements Serializable {
         this.email = email;
     }
 
+    public User() {
+    }
+
     public User(int id) {
         this.id = id;
     }

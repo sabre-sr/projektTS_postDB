@@ -1,14 +1,20 @@
 package ts.projekt.postDB;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Date;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Post implements Serializable {
     public User author;
     private int id;
     private String postBody;
     private LocalDate creationDate;
+
+
+    public Post() {
+    }
 
     public Post(User author, int id, String postBody, LocalDate creationDate) {
         this.author = author;
