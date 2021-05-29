@@ -1,15 +1,16 @@
 package ts.projekt.postDB;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 
 public class Post implements Serializable {
     public User author;
     private int id;
     private String postBody;
-    private Date creationDate;
+    private LocalDate creationDate;
 
-    public Post(User author, int id, String postBody, Date creationDate) {
+    public Post(User author, int id, String postBody, LocalDate creationDate) {
         this.author = author;
         this.id = id;
         this.postBody = postBody;
@@ -28,7 +29,7 @@ public class Post implements Serializable {
         return postBody;
     }
 
-    public Date getCreationDate() {
+    public LocalDate getCreationDate() {
         return creationDate;
     }
 
@@ -44,7 +45,7 @@ public class Post implements Serializable {
         this.postBody = postBody;
     }
 
-    public void setCreationDate(Date creationDate) {
+    public void setCreationDate(LocalDate creationDate) {
         this.creationDate = creationDate;
     }
 }

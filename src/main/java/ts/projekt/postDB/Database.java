@@ -27,12 +27,12 @@ public class Database {
 
     public boolean checkIfDbExists() throws SQLException {
         PreparedStatement statement = conn.prepareStatement("""
-            SELECT *
-            FROM information_schema.tables
-            WHERE table_schema = 'posts' 
-                AND table_name = 'posts'
-            LIMIT 1;
-        """);
+                    SELECT *
+                    FROM information_schema.tables
+                    WHERE table_schema = 'posts' 
+                        AND table_name = 'posts'
+                    LIMIT 1;
+                """);
         ResultSet result = statement.executeQuery();
         boolean exists = result.next();
         result.close();
@@ -45,9 +45,9 @@ public class Database {
                 CREATE TABLE `posts` (
                   `id` int(11) NOT NULL AUTO_INCREMENT,
                   `id_autor` int(11) NOT NULL,
-                  `id_odpowiedz` int(11) DEFAULT NULL,
-                  `data_postu` datetime DEFAULT NULL,
-                  `tresc` varchar(500) NOT NULL,
+                  `id_reply` int(11) DEFAULT NULL,
+                  `post_date` datetime DEFAULT NULL,
+                  `post_body` varchar(500) NOT NULL,
                   PRIMARY KEY (`id`),
                   UNIQUE KEY `table_name_id_uindex` (`id`)
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Post database';
@@ -63,6 +63,7 @@ public class Database {
     public Post getPost(int id) {
         return null;
     }
+
     public boolean removePost(int id) {
         return false;
     }
@@ -70,11 +71,20 @@ public class Database {
     public ArrayList<Post> getReplies(int post_id) {
         return null;
     }
-    public ArrayList<Post> getAllPosts(int limit) {
-        return null;
+
+    public ArrayList<Post> getAllPosts(int limit) throws SQLException {
+        PreparedStatement statement = conn.prepareStatement("""
+                SELECT * FROM posts.posts ORDER BY id DESC;
+                """);
+        ResultSet rs = statement.executeQuery();
+        ArrayList<Post> lista = new ArrayList<>();
+        while (rs.next()) {
+            lista.add(new Post(new User(rs.getInt("id_autor")), rs.getInt("id"), rs.getString("post_body"), rs.getDate("post_date").toLocalDate()));
+        }
+        return lista;
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
 
     }
 }
