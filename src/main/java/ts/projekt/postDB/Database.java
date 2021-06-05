@@ -1,6 +1,7 @@
 package ts.projekt.postDB;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Database {
@@ -56,12 +57,38 @@ public class Database {
         statement.close();
     }
 
-    public boolean addPost(Post post) {
-        return false;
+    public int addPost(Post post) throws SQLException {
+        PreparedStatement statement = conn.prepareStatement("""
+                        INSERT INTO posts.posts(id_autor, post_date, post_body) 
+                        VALUES(?, ?, ?); 
+                """, Statement.RETURN_GENERATED_KEYS);
+        statement.setInt(1, post.getAuthor().getId());
+        statement.setDate(2, Date.valueOf(post.getCreationDate()));
+        statement.setString(3, post.getPostBody());
+        statement.execute();
+        ResultSet keys = statement.getGeneratedKeys();
+        int id=0;
+        if (keys.next()) {
+            id = keys.getInt(1);
+        }
+        statement.close();
+        keys.close();
+        return id;
     }
 
-    public Post getPost(int id) {
-        return null;
+    public Post getPost(int id) throws SQLException {
+        PreparedStatement statement = conn.prepareStatement("""
+                    SELECT * FROM posts.posts p WHERE p.id = ?
+                    """);
+        statement.setInt(1, id);
+        ResultSet result = statement.executeQuery();
+        Post post = null;
+        if (result.next()){
+            post = new Post(new User("",result.getInt("id_autor"),""), result.getInt("id"),result.getString("post_body"), result.getDate("post_date").toLocalDate());
+        }
+        statement.close();
+        result.close();
+        return post;
     }
 
     public boolean removePost(int id) {
@@ -84,7 +111,7 @@ public class Database {
         return lista;
     }
 
-    public static void main(String[] args) {
-
+    public static void main(String[] args) throws SQLException {
+        
     }
 }

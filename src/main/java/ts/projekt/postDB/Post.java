@@ -54,4 +54,14 @@ public class Post implements Serializable {
     public void setCreationDate(LocalDate creationDate) {
         this.creationDate = creationDate;
     }
+
+    @Override
+    public String toString() {
+        return "Post{" +
+                "author=" + author +
+                ", id=" + id +
+                ", postBody='" + postBody + '\'' +
+                ", creationDate=" + creationDate +
+                '}';
+    }
 }
