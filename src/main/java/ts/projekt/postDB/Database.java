@@ -1,6 +1,8 @@
 package ts.projekt.postDB;
 
 import java.sql.*;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Database {
@@ -56,12 +58,37 @@ public class Database {
         statement.close();
     }
 
-    public boolean addPost(Post post) {
-        return false;
+    public Post addPost(Post post) throws SQLException {
+        PreparedStatement statement = conn.prepareStatement("""
+                INSERT INTO posts (id_autor, id_reply, post_date, post_body, image_filename) VALUES 
+                (?, ?, NOW(), ?, NULL);
+                """, Statement.RETURN_GENERATED_KEYS);
+        statement.setInt(1, post.getAuthor().getId());
+        statement.setInt(2, post.getRepliedTo().getId());
+        statement.setString(3, post.getPostBody());
+        statement.execute();
+        ResultSet keys = statement.getGeneratedKeys();
+        int id = 0;
+        if (keys.next())
+            id = keys.getInt(1);
+        statement.close();
+        keys.close();
+        if (id != 0)
+            return getPost(id);
+        else return null;
     }
 
-    public Post getPost(int id) {
-        return null;
+    public Post getPost(int id) throws SQLException {
+        PreparedStatement statement = conn.prepareStatement("""
+                        SELECT * FROM posts WHERE id = ?;
+                """);
+        statement.setInt(1, id);
+        ResultSet result = statement.executeQuery();
+        Post post = new Post(new User(result.getInt("id_autor")), result.getInt("id"), result.getString("post_body"),
+                result.getDate("post_date").toLocalDate());
+        result.close();
+        statement.close();
+        return post;
     }
 
     public boolean removePost(int id) {
