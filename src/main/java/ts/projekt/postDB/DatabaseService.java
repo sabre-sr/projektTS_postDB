@@ -1,9 +1,6 @@
 package ts.projekt.postDB;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -24,5 +21,10 @@ public class DatabaseService {
     @PostMapping(path = "addPost")
     public Post addPost(@RequestBody Post post) throws SQLException {
         return Database.bazaDanych.addPost(post);
+    }
+
+    @GetMapping(path="replies/{id}")
+    public ArrayList<Post> getReplies(@PathVariable int id) {
+        return Database.bazaDanych.getReplies(id);
     }
 }
