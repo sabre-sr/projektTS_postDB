@@ -95,20 +95,34 @@ public class Database {
         return false;
     }
 
-    public ArrayList<Post> getReplies(int post_id) {
-        return null;
+    public ArrayList<Post> getReplies(int post_id) throws SQLException {
+        PreparedStatement statement = conn.prepareStatement("""
+                SELECT * FROM posts.posts WHERE id_reply = ? ORDER BY id DESC;
+                """);
+        statement.setInt(1, post_id);
+        return getPostsArray(statement);
+    }
+
+    private ArrayList<Post> getPostsArray(PreparedStatement statement) throws SQLException {
+        ResultSet rs = statement.executeQuery();
+        ArrayList<Post> lista = new ArrayList<>();
+        while (rs.next()) {
+            Post post = new Post(new User(
+                    rs.getInt("id_autor")),
+                    rs.getInt("id"),
+                    rs.getString("post_body"),
+                    rs.getDate("post_date").toLocalDate());
+            post.setRepliedTo(new Post(rs.getInt("id_reply")));
+            lista.add(post);
+        }
+        return lista;
     }
 
     public ArrayList<Post> getAllPosts(int limit) throws SQLException {
         PreparedStatement statement = conn.prepareStatement("""
-                SELECT * FROM posts.posts ORDER BY id DESC;
+                SELECT * FROM posts.posts WHERE id_reply IS NULL ORDER BY id DESC;
                 """);
-        ResultSet rs = statement.executeQuery();
-        ArrayList<Post> lista = new ArrayList<>();
-        while (rs.next()) {
-            lista.add(new Post(new User(rs.getInt("id_autor")), rs.getInt("id"), rs.getString("post_body"), rs.getDate("post_date").toLocalDate()));
-        }
-        return lista;
+        return getPostsArray(statement);
     }
 
     public static void main(String[] args) {

@@ -24,7 +24,7 @@ public class DatabaseService {
     }
 
     @GetMapping(path="replies/{id}")
-    public ArrayList<Post> getReplies(@PathVariable int id) {
+    public ArrayList<Post> getReplies(@PathVariable int id) throws SQLException {
         return Database.bazaDanych.getReplies(id);
     }
 }

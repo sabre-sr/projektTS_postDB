@@ -16,6 +16,10 @@ public class Post implements Serializable {
     public Post() {
     }
 
+    public Post(int id) {
+        this.id = id;
+    }
+
     public Post(User author, int id, String postBody, LocalDate creationDate) {
         this.author = author;
         this.id = id;
