@@ -18,8 +18,11 @@ import java.util.ArrayList;
 public class DatabaseService {
     private final static Logger log = LoggerFactory.getLogger(DatabaseService.class);
 
-    @Autowired
-    private HttpServletRequest request;
+    private final HttpServletRequest request;
+
+    public DatabaseService(HttpServletRequest request) {
+        this.request = request;
+    }
 
     @GetMapping(path = "/get-posts")
     public ArrayList<Post> getAllPosts() {
@@ -37,12 +40,12 @@ public class DatabaseService {
         return Database.bazaDanych.addPost(post);
     }
 
-    @GetMapping(path="replies/{id}")
+    @GetMapping(path = "replies/{id}")
     public ArrayList<Post> getReplies(@PathVariable int id) throws SQLException {
         return Database.bazaDanych.getReplies(id);
     }
 
-    @GetMapping(path="images/{filename}")
+    @GetMapping(path = "images/{filename}")
     @ResponseBody
     public ResponseEntity<Resource> getFile(@PathVariable String filename) {
         return null;
@@ -56,10 +59,7 @@ public class DatabaseService {
             if (!new File(realPathtoUploads).exists()) {
                 new File(realPathtoUploads).mkdir();
             }
-
             log.info("realPathtoUploads = {}", realPathtoUploads);
-
-
             String orgName = file.getOriginalFilename();
             String filePath = realPathtoUploads + orgName;
             File dest = new File(filePath);

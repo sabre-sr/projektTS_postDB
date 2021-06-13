@@ -97,7 +97,7 @@ public class Database {
 
     public ArrayList<Post> getReplies(int post_id) throws SQLException {
         PreparedStatement statement = conn.prepareStatement("""
-                SELECT * FROM posts.posts WHERE id_reply = ? ORDER BY id DESC;
+                SELECT * FROM posts.posts WHERE id_reply = ? ORDER BY post_date DESC;
                 """);
         statement.setInt(1, post_id);
         return getPostsArray(statement);
@@ -120,7 +120,7 @@ public class Database {
 
     public ArrayList<Post> getAllPosts(int limit) throws SQLException {
         PreparedStatement statement = conn.prepareStatement("""
-                SELECT * FROM posts.posts WHERE id_reply IS NULL ORDER BY id DESC;
+                SELECT * FROM posts.posts WHERE id_reply IS NULL ORDER BY post_date DESC;
                 """);
         return getPostsArray(statement);
     }
