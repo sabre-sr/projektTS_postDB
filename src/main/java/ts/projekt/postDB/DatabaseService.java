@@ -1,16 +1,22 @@
 package ts.projekt.postDB;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -69,5 +75,19 @@ public class DatabaseService {
             return post;
         }
         return null;
+    }
+
+    @GetMapping(path="getFile/{name}", produces = MediaType.IMAGE_JPEG_VALUE)
+    public @ResponseBody byte[] getImage(@PathVariable String name) {
+//        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Failed to read requested file.");
+        String imagepath = request.getServletContext().getRealPath("/uploads/") + name;
+        File file = new File(imagepath);
+        if (!file.exists())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Failed to read requested file.");
+        try {
+            return Files.readAllBytes(file.toPath());
+        } catch (IOException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Failed to translate file to bytes.");
+        }
     }
 }

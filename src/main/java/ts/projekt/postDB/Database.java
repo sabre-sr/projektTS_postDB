@@ -61,11 +61,12 @@ public class Database {
     public Post addPost(Post post) throws SQLException {
         PreparedStatement statement = conn.prepareStatement("""
                 INSERT INTO posts (id_autor, id_reply, post_date, post_body, image_filename) VALUES 
-                (?, ?, NOW(), ?, NULL);
+                (?, ?, NOW(), ?, ?);
                 """, Statement.RETURN_GENERATED_KEYS);
         statement.setInt(1, post.getAuthor().getId());
         statement.setInt(2, post.getRepliedTo().getId());
         statement.setString(3, post.getPostBody());
+        statement.setString(4, post.getFilename());
         statement.execute();
         ResultSet keys = statement.getGeneratedKeys();
         int id = 0;
