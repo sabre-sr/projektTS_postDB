@@ -1,8 +1,6 @@
 package ts.projekt.postDB;
 
 import java.sql.*;
-import java.time.Instant;
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class Database {
@@ -31,7 +29,7 @@ public class Database {
         PreparedStatement statement = conn.prepareStatement("""
                     SELECT *
                     FROM information_schema.tables
-                    WHERE table_schema = 'posts' 
+                    WHERE table_schema = 'posts'
                         AND table_name = 'posts'
                     LIMIT 1;
                 """);
@@ -60,11 +58,13 @@ public class Database {
 
     public Post addPost(Post post) throws SQLException {
         PreparedStatement statement = conn.prepareStatement("""
-                INSERT INTO posts (id_autor, id_reply, post_date, post_body, image_filename) VALUES 
+                INSERT INTO posts (id_autor, id_reply, post_date, post_body, image_filename) VALUES
                 (?, ?, NOW(), ?, ?);
                 """, Statement.RETURN_GENERATED_KEYS);
         statement.setInt(1, post.getAuthor().getId());
-        statement.setInt(2, post.getRepliedTo().getId());
+        if (post.getRepliedTo() != null && post.getRepliedTo().getId() != 0)
+            statement.setInt(2, post.getRepliedTo().getId());
+        else statement.setNull(2, Types.INTEGER);
         statement.setString(3, post.getPostBody());
         statement.setString(4, post.getFilename());
         statement.execute();
@@ -95,10 +95,6 @@ public class Database {
         return post;
     }
 
-    public boolean removePost(int id) {
-        return false;
-    }
-
     public ArrayList<Post> getReplies(int post_id) throws SQLException {
         PreparedStatement statement = conn.prepareStatement("""
                 SELECT * FROM posts.posts WHERE id_reply = ? ORDER BY post_date DESC;
@@ -123,7 +119,7 @@ public class Database {
         return lista;
     }
 
-    public ArrayList<Post> getAllPosts(int limit) throws SQLException {
+    public ArrayList<Post> getAllPosts() throws SQLException {
         PreparedStatement statement = conn.prepareStatement("""
                 SELECT * FROM posts.posts WHERE id_reply IS NULL ORDER BY post_date DESC;
                 """);
