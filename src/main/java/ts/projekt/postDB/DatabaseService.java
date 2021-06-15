@@ -41,6 +41,11 @@ public class DatabaseService {
         return posty;
     }
 
+    @GetMapping(path = "post/{id}")
+    public Post getPost(@PathVariable int id) throws SQLException {
+        return Database.bazaDanych.getPost(id);
+    }
+
     @PostMapping(path = "addPost")
     public Post addPost(@RequestBody Post post) throws SQLException {
         return Database.bazaDanych.addPost(post);

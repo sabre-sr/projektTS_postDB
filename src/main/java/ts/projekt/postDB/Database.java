@@ -85,8 +85,11 @@ public class Database {
                 """);
         statement.setInt(1, id);
         ResultSet result = statement.executeQuery();
-        Post post = new Post(new User(result.getInt("id_autor")), result.getInt("id"), result.getString("post_body"),
-                result.getDate("post_date").toLocalDate());
+        Post post = null;
+        if (result.next()) {
+            post = new Post(new User(result.getInt("id_autor")), result.getInt("id"), result.getString("post_body"),
+                    result.getDate("post_date").toLocalDate(), result.getString("image_filename"));
+        }
         result.close();
         statement.close();
         return post;
@@ -112,7 +115,8 @@ public class Database {
                     rs.getInt("id_autor")),
                     rs.getInt("id"),
                     rs.getString("post_body"),
-                    rs.getDate("post_date").toLocalDate());
+                    rs.getDate("post_date").toLocalDate(),
+                    rs.getString("image_filename"));
             post.setRepliedTo(new Post(rs.getInt("id_reply")));
             lista.add(post);
         }
