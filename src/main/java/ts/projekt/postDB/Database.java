@@ -130,6 +130,14 @@ public class Database {
         return getPostsArray(statement);
     }
 
+    public Post removePost(Post post) throws SQLException {
+        PreparedStatement statement = conn.prepareStatement("DELETE FROM posts WHERE id = ?;");
+        statement.setInt(1, post.getId());
+        statement.execute();
+        statement.close();
+        return post;
+    }
+
     public static void main(String[] args) {
 
     }

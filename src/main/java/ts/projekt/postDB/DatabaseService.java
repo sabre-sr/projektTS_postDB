@@ -41,6 +41,11 @@ public class DatabaseService {
         return posty;
     }
 
+    @DeleteMapping(path = "/deletePost/{id}")
+    public Post deletePost(@PathVariable int id) throws SQLException {
+        return Database.bazaDanych.removePost(new Post(id));
+    }
+
     @GetMapping(path = "post/{id}")
     public Post getPost(@PathVariable int id) throws SQLException {
         return Database.bazaDanych.getPost(id);
