@@ -51,12 +51,6 @@ public class DatabaseService {
         return Database.bazaDanych.getReplies(id);
     }
 
-    @GetMapping(path = "images/{filename}")
-    @ResponseBody
-    public ResponseEntity<Resource> getFile(@PathVariable String filename) {
-        return null;
-    }
-
     @PostMapping(path = "uploadFile")
     public Post uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
         if (!file.isEmpty()) {
